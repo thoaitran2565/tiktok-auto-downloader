@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Lấy trạng thái hiện tại từ content script trên tab đang mở
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   
-  if (!tab.url.includes("tiktok.com")) {
+  if (!tab || !tab.url || !tab.url.includes("tiktok.com")) {
     toggleBtn.innerText = "Chỉ dùng trên TikTok";
     toggleBtn.disabled = true;
     return;

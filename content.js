@@ -169,7 +169,7 @@ async function runStep() {
   if (!isRunning) return;
 
   // 5. Chờ nút chuyển video tiếp theo xuất hiện và click
-  const nextVideoBtn = await waitForElement('[data-e2e="arrow-right"]', 5000);
+  const nextVideoBtn = await waitForElement('[data-e2e="arrow-right"]', 10000);
   
   if (!isRunning) return;
 

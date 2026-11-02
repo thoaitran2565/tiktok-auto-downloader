@@ -4,13 +4,22 @@
   <meta charset="utf-8">
   <style>
     body {
-      width: 180px;
-      font-family: Arial, sans-serif;
-      padding: 10px;
+      width: 220px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 14px;
       margin: 0;
       text-align: center;
-      background: #f4f4f4;
+      background-color: #121212; /* Nền tối */
+      color: #e0e0e0;            /* Chữ sáng */
     }
+    
+    .header-title {
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #fe2c55;
+    }
+
     button {
       width: 100%;
       padding: 10px;
@@ -19,19 +28,77 @@
       color: white;
       background-color: #fe2c55; /* Màu thương hiệu TikTok */
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
+      transition: background-color 0.2s ease;
     }
+
     button:hover {
       background-color: #e0244c;
     }
+
     button.running {
-      background-color: #333;
+      background-color: #444444;
+      color: #ff4d4d;
+    }
+
+    button:disabled {
+      background-color: #333333;
+      color: #888888;
+      cursor: not-allowed;
+    }
+
+    .info-box {
+      margin-top: 14px;
+      padding: 10px;
+      background-color: #1e1e1e;
+      border-radius: 6px;
+      border: 1px solid #333333;
+      text-align: left;
+    }
+
+    .info-title {
+      font-size: 12px;
+      font-weight: bold;
+      color: #fe2c55;
+      margin-bottom: 4px;
+    }
+
+    .info-desc {
+      font-size: 11px;
+      line-height: 1.4;
+      color: #aaa;
+    }
+
+    .features-list {
+      margin: 6px 0 0 0;
+      padding-left: 14px;
+      font-size: 11px;
+      color: #bbb;
+    }
+
+    .features-list li {
+      margin-bottom: 3px;
     }
   </style>
 </head>
 <body>
+  <div class="header-title">TikTok Auto Downloader</div>
+  
   <button id="toggleBtn">Bắt đầu</button>
+
+  <div class="info-box">
+    <div class="info-title">📌 Giới thiệu & Mô tả</div>
+    <div class="info-desc">
+      Công cụ hỗ trợ tải video TikTok tự động và chuyển video tiếp theo.
+    </div>
+    <ul class="features-list">
+      <li>Tự động kích hoạt menu & tải video.</li>
+      <li>Tự động cuộn sang video kế tiếp.</li>
+      <li>Lưu lịch sử (JSON) để chống tải trùng.</li>
+    </ul>
+  </div>
+
   <script src="popup.js"></script>
 </body>
 </html>
