@@ -87,7 +87,6 @@ function saveToHistory(videoTitle) {
     const history = getDownloadedHistory();
     if (!history.includes(videoTitle)) {
       history.push(videoTitle);
-      // Giới hạn lưu tối đa 500 video gần nhất để không làm nặng bộ nhớ trình duyệt
       if (history.length > 500) {
         history.shift();
       }
@@ -117,7 +116,7 @@ async function runStep() {
     return;
   }
 
-  // 2. Lấy tên/tiêu đề video từ thẻ <span data-e2e="new-desc-span">
+  // 2. Lấy tên/tiêu đề video hiện tại từ thẻ <span data-e2e="new-desc-span">
   const titleElement = document.querySelector('[data-e2e="new-desc-span"]');
   const videoTitle = titleElement ? titleElement.innerText.trim() : "";
 
@@ -128,7 +127,7 @@ async function runStep() {
       console.log(`[DỪNG TOOL] Video này đã có trong lịch sử: "${videoTitle}"`);
       alert(`Tool đã dừng vì gặp video đã tải trước đó: "${videoTitle}"`);
       stopAutomation();
-      return; // Dừng hẳn, không chạy tiếp nữa
+      return; 
     }
   } else {
     console.log("Không lấy được tên video, tiếp tục tiến trình...");
@@ -151,6 +150,7 @@ async function runStep() {
 
   if (downloadBtn) {
     console.log("Đã tìm thấy nút 'Tải về video', tiến hành click...");
+    await sleep(1000);
     downloadBtn.click();
     
     // Nếu tải thành công và có tên video, tiến hành lưu vào lịch sử
@@ -165,7 +165,7 @@ async function runStep() {
     return;
   }
 
-  await sleep(1500);
+  await sleep(1000);
   if (!isRunning) return;
 
   // 5. Chờ nút chuyển video tiếp theo xuất hiện và click
@@ -187,7 +187,35 @@ async function runStep() {
     }));
   }
 
-  timer = setTimeout(runStep, 3000);
+  // 6. KIỂM TRA ĐỔI TÊN: Đợi cho đến khi tên video thực sự thay đổi mới bắt đầu vòng mới
+  console.log("Đang đợi video mới load và thay đổi tên...");
+  let isVideoChanged = false;
+  const startTime = Date.now();
+
+  while (isRunning) {
+    await sleep(400); // Kiểm tra liên tục mỗi 400ms
+    
+    const newTitleElement = document.querySelector('[data-e2e="new-desc-span"]');
+    const newTitle = newTitleElement ? newTitleElement.innerText.trim() : "";
+
+    // Nếu tên video mới xuất hiện và khác với tên video cũ => Đã chuyển video thành công
+    if (newTitle && newTitle !== videoTitle) {
+      console.log(`Đã chuyển sang video mới thành công: "${newTitle}"`);
+      isVideoChanged = true;
+      break;
+    }
+
+    // Phòng trường hợp mạng quá lag đợi quá 15 giây thì tự động cho qua vòng mới luôn để tránh bị kẹt cứng
+    if (Date.now() - startTime > 15000) {
+      console.log("Quá thời gian chờ đổi tên video, tiếp tục vòng mới...");
+      break;
+    }
+  }
+
+  if (!isRunning) return;
+
+  // Bắt đầu vòng lặp tiếp theo ngay lập tức sau khi xác nhận đã đổi video
+  timer = setTimeout(runStep, 1000);
 }
 
 function sleep(ms) {
